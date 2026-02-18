@@ -36,6 +36,15 @@ services:
       timeout: 15s
       retries: 5
 
+  redis:
+    image: redis:8.4.0-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - internalNetwork
+    restart: unless-stopped
+    depends_on:
+      - database
 
 volumes:
   postgres_data:

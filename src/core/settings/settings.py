@@ -2,10 +2,14 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.core.settings.db_settings import DBSettings
+from src.core.settings.rabbitmq_settings import RabbitMQSettings
+from src.core.settings.redis_settings import RedisSettings
 
 
 class Settings(BaseSettings):
     db: DBSettings = Field(default_factory=DBSettings)
+    redis: RedisSettings = Field(default_factory=RedisSettings)
+    rmq: RabbitMQSettings = Field(default_factory=RabbitMQSettings)
 
     model_config = SettingsConfigDict(
         env_file=".env",
