@@ -1,0 +1,45 @@
+services:
+  database:
+    image: postgres:18.1-alpine3.22
+    env_file:
+      - .env_db
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD?Set password!}
+      POSTGRES_USER: ${DB_USER?Set username!}
+      POSTGRES_DB: ${DB_NAME?Set db name!}
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    shm_size: 256mb
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${db_user}" ]
+      interval: 30s
+      timeout: 15s
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - internalNetwork
+
+  rabbitmq:
+    image: rabbitmq:4.2.2-management-alpine
+    hostname: rabbitmq
+    depends_on:
+      - database
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - internalNetwork
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+
+
+volumes:
+  postgres_data:
+
+networks:
+  internalNetwork:
+    driver: bridge

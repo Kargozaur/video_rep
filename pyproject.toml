@@ -1,0 +1,39 @@
+[project]
+name = "video-rep"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aerich[toml]>=0.8.1",
+    "aio-pika>=9.5.8",
+    "asyncpg>=0.31.0",
+    "celery>=5.6.2",
+    "dotenv>=0.9.9",
+    "fastapi[all]>=0.129.0",
+    "tortoise-orm>=1.1.4",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.1",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "W",
+    "ANN",
+    "UP",
+]
+
+[tool.aerich]
+tortoise_orm = "src.core.settings.tortoise_config.TORTOISE_CONFIG"
+location = "./migrations"
+src_folder = "./."
