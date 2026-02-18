@@ -7,7 +7,6 @@ app = Celery(
     "video_rep",
     broker=settings.rmq.url,
     backend=settings.redis.url,
-    include=["src.tasks."],
 )
 
 app.conf.update(

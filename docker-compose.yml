@@ -23,6 +23,9 @@ services:
   rabbitmq:
     image: rabbitmq:4.2.2-management-alpine
     hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     depends_on:
       - database
     ports:

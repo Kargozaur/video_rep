@@ -6,6 +6,8 @@ from tortoise.contrib.fastapi import register_tortoise
 
 from src.core.settings.settings import get_settings
 from src.core.settings.tortoise_config import TORTOISE_CONFIG
+from src.reporter.reporter import Report
+from src.tasks.video_randerer import generate_video_task
 
 
 def main() -> FastAPI:
@@ -15,6 +17,13 @@ def main() -> FastAPI:
     @app.get("/")
     async def get_main() -> dict[str, str]:
         return {"pr": "video-rep"}
+
+    @app.post("/report")
+    async def create_report(data: dict) -> dict:
+        title = data.get("title", "Untitled report")
+        report = await Report.create(title=title, data=data, status="pending")
+        generate_video_task.delay(report.id)
+        return {"id": report.id, "message": "rendering"}
 
     return app
 
